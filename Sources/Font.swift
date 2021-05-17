@@ -9,6 +9,19 @@ import UIKit
 
 /// A structure that describes a font
 public struct Font: Equatable {
+	public init(size: CGFloat = 0, maximumSize: CGFloat? = nil, style: UIFont.TextStyle? = nil, weight: UIFont.Weight? = nil, design: UIFontDescriptor.SystemDesign? = nil, traits: UIFontDescriptor.SymbolicTraits? = nil, scalability: Font.Scalability = .scalable, name: String? = nil, kerning: CGFloat? = nil, lineHeight: CGFloat? = nil) {
+		self.size = size
+		self.maximumSize = maximumSize
+		self.style = style
+		self.weight = weight
+		self.design = design
+		self.traits = traits
+		self.scalability = scalability
+		self.name = name
+		self.kerning = kerning
+		self.lineHeight = lineHeight
+	}
+
 	/// The size of this font, in points
 	public var size: CGFloat = 0
 
