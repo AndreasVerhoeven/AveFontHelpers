@@ -8,20 +8,17 @@
 import UIKit
 
 public extension Font {
-	static var ios = iOS()
-
-	// iOS text style fonts
-	struct iOS {
-		var largeTitle = Font(style: .largeTitle)
-		var title1 = Font(style: .title1)
-		var title2 = Font(style: .title2)
-		var title3 = Font(style: .title3)
-		var headline = Font(style: .headline)
-		var subheadline = Font(style: .subheadline)
-		var body = Font(style: .body)
-		var callout = Font(style: .callout)
-		var footnote = Font(style: .footnote)
-		var caption1 = Font(style: .caption1)
-		var caption2 = Font(style: .caption2)
+	enum ios {
+		public static let largeTitle = Font(style: .largeTitle)
+		public static let title1 = Font(style: .title1)
+		public static let title2 = Font(style: .title2)
+		public static let title3 = Font(style: .title3)
+		public static let headline = Font(style: .headline)
+		public static let subheadline = Font(style: .subheadline)
+		public static let body = Font(style: .body)
+		public static let callout = Font(style: .callout)
+		public static let footnote = Font(style: .footnote)
+		public static let caption1 = Font(style: .caption1)
+		public static let caption2 = Font(style: .caption2)
 	}
 }
