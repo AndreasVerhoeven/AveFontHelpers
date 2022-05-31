@@ -39,11 +39,34 @@ public extension UIFont {
 	}
 
 	func withWeight(_ weight: UIFont.Weight) -> UIFont {
-		let newDescriptor = fontDescriptor.addingAttributes([
-			.traits: [UIFontDescriptor.TraitKey.weight: weight]
-		])
-		return withFontDescriptor(newDescriptor)
+		withAttributes([.traits: [UIFontDescriptor.TraitKey.weight: weight]])
 	}
+	
+	func withAttributes(_ attributes: [UIFontDescriptor.AttributeName: Any]) -> UIFont {
+		return withFontDescriptor(fontDescriptor.addingAttributes(attributes))
+	}
+	
+	func withFeatureSettings(_ settings: [(Int, Int)]) -> UIFont {
+		guard settings.isEmpty == false else { return self }
+		
+		if #available(iOS 15, *) {
+			let settingsList = settings.map { [UIFontDescriptor.FeatureKey.type: $0.0, UIFontDescriptor.FeatureKey.selector: $0.1] }
+			return withAttributes([UIFontDescriptor.AttributeName.featureSettings: settingsList])
+		} else {
+			let settingsList = settings.map { [UIFontDescriptor.FeatureKey.featureIdentifier: $0.0, UIFontDescriptor.FeatureKey.typeIdentifier: $0.1] }
+			return withAttributes([UIFontDescriptor.AttributeName.featureSettings: settingsList])
+		}
+	}
+	
+	func withAlternateStyle(_ style: Int) -> UIFont {
+		return withFeatureSettings([(kStylisticAlternativesType, kStylisticAltOneOnSelector)])
+	}
+	
+	var monospacedNumbers: UIFont { withFeatureSettings([(kNumberSpacingType, kMonospacedNumbersSelector)]) }
+	var sanFranciscoAlternate6And9Style: UIFont { withAlternateStyle(kStylisticAltOneOnSelector) }
+	var sanFranciscoAlternate4Style: UIFont { withAlternateStyle(kStylisticAltTwoOnSelector) }
+	var sanFranciscoAlternateHighLegibilityStyle: UIFont { withAlternateStyle(kStylisticAltSixOnSelector) }
+	
 
 	var textStyle: TextStyle? {
 		guard let styleName = fontDescriptor.fontAttributes[.textStyle] as? String else { return nil }
@@ -60,4 +83,8 @@ public extension UIFont {
 	private var traits: [UIFontDescriptor.TraitKey: Any] {
 		return fontDescriptor.object(forKey: .traits) as? [UIFontDescriptor.TraitKey: Any] ?? [:]
 	}
+}
+
+public extension UIFont {
+	static func from(_ from: Font) -> UIFont { from.font() }
 }

@@ -37,13 +37,26 @@ class ViewController: UIViewController {
 		let subTitle = UILabel(text: "A Sub Title", font: .subTitle, color: .label, alignment: .center)
 		stackView.addArrangedSubview(subTitle)
 
-		let roundedLabel = UILabel(text: "22,34", font: .giantNumber, color: .label, alignment: .center)
+		let roundedLabel = UILabel(text: "9.622,34", font: .giantNumber, color: .label, alignment: .center)
 		stackView.addArrangedSubview(roundedLabel)
+		
+		let roundedMonospacedLabel = UILabel(text: "9.622,34", font: .giantNumber.monospacedNumbers.sfStraightSidesSixAndNine.sfOpenFour, color: .label, alignment: .center)
+		stackView.addArrangedSubview(roundedMonospacedLabel)
 
 		let bodyText = String(repeating: "Body text goes here. ", count: 4)
 		let bodyTextView = UITextView(text: bodyText, font: .ios.body.smaller.bold, color: .secondaryLabel, alignment: .center)
+		bodyTextView.isScrollEnabled = false
 		stackView.addArrangedSubview(bodyTextView)
-
+		
+		let text = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ:_/+-*$%@# ½ × ①"
+		let bodyTextViewRegular = UITextView(text: text, font: .ios.body, color: .label, alignment: .center)
+		bodyTextViewRegular.isScrollEnabled = false
+		stackView.addArrangedSubview(bodyTextViewRegular)
+		
+		let bodyTextViewAlternative = UITextView(text: text, font: .ios.body.with(alternateStyles: [.sf.oneStoreyA, .sf.highLegibility, .sf.openCurrencies, .sf.verticallyAlignedColon]), color: .label, alignment: .center)
+		bodyTextViewAlternative.isScrollEnabled = false
+		stackView.addArrangedSubview(bodyTextViewAlternative)
+		
 		// spacer
 		stackView.addArrangedSubview(UIView())
 	}
