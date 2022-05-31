@@ -63,11 +63,14 @@ public extension UIFont {
 	}
 	
 	var monospacedNumbers: UIFont { withFeatureSettings([(kNumberSpacingType, kMonospacedNumbersSelector)]) }
-	var sanFranciscoAlternate6And9Style: UIFont { withAlternateStyle(kStylisticAltOneOnSelector) }
-	var sanFranciscoAlternate4Style: UIFont { withAlternateStyle(kStylisticAltTwoOnSelector) }
-	var sanFranciscoAlternateHighLegibilityStyle: UIFont { withAlternateStyle(kStylisticAltSixOnSelector) }
 	
-
+	var sfStraightSidesSixAndNine: UIFont { withAlternateStyle(kStylisticAltOneOnSelector) }
+	var sfOpenFour: UIFont { withAlternateStyle(kStylisticAltTwoOnSelector) }
+	var sfVerticallyAlignedColon: UIFont { withAlternateStyle(kStylisticAltThreeOnSelector) }
+	var sfOpenCurrencies: UIFont { withAlternateStyle(kStylisticAltFourOnSelector) }
+	var sfHighLegibility: UIFont { withAlternateStyle(kStylisticAltSixOnSelector) }
+	var sfOneStoreyA: UIFont { withAlternateStyle(kStylisticAltSevenOnSelector) }
+	
 	var textStyle: TextStyle? {
 		guard let styleName = fontDescriptor.fontAttributes[.textStyle] as? String else { return nil }
 		return TextStyle(rawValue: styleName)

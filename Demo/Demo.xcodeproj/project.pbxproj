@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4973A6152846BB9B0018B706 /* Font+AdditionalProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4973A6142846BB9A0018B706 /* Font+AdditionalProperties.swift */; };
+		4973A6172846BCDA0018B706 /* Font+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4973A6162846BCDA0018B706 /* Font+Cache.swift */; };
 		49A6F79626508AAB002EB98D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F79526508AAB002EB98D /* AppDelegate.swift */; };
 		49A6F79826508AAB002EB98D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F79726508AAB002EB98D /* SceneDelegate.swift */; };
 		49A6F79A26508AAB002EB98D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F79926508AAB002EB98D /* ViewController.swift */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4973A6142846BB9A0018B706 /* Font+AdditionalProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+AdditionalProperties.swift"; sourceTree = "<group>"; };
+		4973A6162846BCDA0018B706 /* Font+Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Cache.swift"; sourceTree = "<group>"; };
 		49A6F79226508AAB002EB98D /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A6F79526508AAB002EB98D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49A6F79726508AAB002EB98D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				49A6F81C2652B3D8002EB98D /* Font.swift */,
+				4973A6142846BB9A0018B706 /* Font+AdditionalProperties.swift */,
+				4973A6162846BCDA0018B706 /* Font+Cache.swift */,
 				49A6F8222652B91D002EB98D /* Font+ConvenenienceInits.swift */,
 				49A6F81E2652B432002EB98D /* UIFont+Helper.swift */,
 				49A6F8202652B8E1002EB98D /* UIFontWeight+Helper.swift */,
@@ -160,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4973A6172846BCDA0018B706 /* Font+Cache.swift in Sources */,
 				49A6F8232652B91D002EB98D /* Font+ConvenenienceInits.swift in Sources */,
 				49A6F8212652B8E1002EB98D /* UIFontWeight+Helper.swift in Sources */,
 				49A6F79A26508AAB002EB98D /* ViewController.swift in Sources */,
@@ -168,6 +175,7 @@
 				49A6F81F2652B432002EB98D /* UIFont+Helper.swift in Sources */,
 				49A6F8252652BBE7002EB98D /* UIKit+FontHelpers.swift in Sources */,
 				49A6F81D2652B3D8002EB98D /* Font.swift in Sources */,
+				4973A6152846BB9B0018B706 /* Font+AdditionalProperties.swift in Sources */,
 				49A6F79826508AAB002EB98D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

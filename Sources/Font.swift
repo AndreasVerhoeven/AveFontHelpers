@@ -8,7 +8,7 @@
 import UIKit
 
 /// A structure that describes a font
-public struct Font: Equatable {
+public struct Font: Hashable {
 	public init(size: CGFloat = 0, maximumSize: CGFloat? = nil, style: UIFont.TextStyle? = nil, weight: UIFont.Weight? = nil, design: UIFontDescriptor.SystemDesign? = nil, traits: UIFontDescriptor.SymbolicTraits? = nil, scalability: Font.Scalability = .scalable, name: String? = nil, kerning: CGFloat? = nil, lineHeight: CGFloat? = nil) {
 		self.size = size
 		self.maximumSize = maximumSize
@@ -52,7 +52,7 @@ public struct Font: Equatable {
 	/// custom line height for the font
 	public var lineHeight: CGFloat? = nil
 
-	public enum Scalability {
+	public enum Scalability: Hashable {
 		/// the font is just a placeholder that should not scale
 		case placeholder
 
@@ -80,19 +80,6 @@ public struct Font: Equatable {
 }
 
 public extension Font {
-	private func with<T>(value: T? = nil, for keyPath: WritableKeyPath<Font, T>) -> Self {
-		guard let value = value else { return self }
-		var item = self
-		item[keyPath: keyPath] = value
-		return item
-	}
-	
-	private func with<T>(nullableValue value: T? = nil, for keyPath: WritableKeyPath<Font, T?>) -> Self {
-		var item = self
-		item[keyPath: keyPath] = value
-		return item
-	}
-
 	func smaller(by: CGFloat) -> Self {
 		return with(size: size - by)
 	}
@@ -140,22 +127,22 @@ public extension Font {
 		}
 	}
 
-	var rounded: Self {with(design: .rounded)}
-	var serif: Self {with(design: .serif)}
+	var rounded: Self { with(design: .rounded) }
+	var serif: Self { with(design: .serif) }
 
-	var ultraLight: Self {with(weight: .ultraLight)}
-	var thin: Self {with(weight: .thin)}
-	var light: Self {with(weight: .light)}
-	var regular: Self {with(weight: .regular)}
-	var medium: Self {with(weight: .medium)}
-	var semibold: Self {with(weight: .semibold)}
-	var bold: Self {with(weight: .bold)}
-	var heavy: Self {with(weight: .heavy)}
-	var black: Self {with(weight: .black)}
+	var ultraLight: Self { with(weight: .ultraLight) }
+	var thin: Self { with(weight: .thin) }
+	var light: Self { with(weight: .light) }
+	var regular: Self { with(weight: .regular) }
+	var medium: Self { with(weight: .medium) }
+	var semibold: Self { with(weight: .semibold) }
+	var bold: Self { with(weight: .bold) }
+	var heavy: Self { with(weight: .heavy) }
+	var black: Self { with(weight: .black) }
 
-	var italic: Self {with(traits: .traitItalic)}
+	var italic: Self { with(traits: .traitItalic) }
 
-	var unkerned: Self {with(kerning: nil)}
+	var unkerned: Self { with(kerning: nil) }
 	var fixed: Self { with(scalability: .fixed) }
 	
 	func with(numberCase: NumberCase? = nil) -> Self { with(nullableValue: numberCase, for: \.numberCase) }
@@ -190,43 +177,7 @@ public extension Font {
 }
 
 public extension Font {
-	func font() -> UIFont {
-		var font: UIFont
-		if let name = name {
-			font = UIFont(name: name, size: size) ?? UIFont.systemFont(ofSize: size)
-		} else if size == 0, let style = style {
-			font = UIFont.preferredFont(forTextStyle: style)
-		} else {
-			font = UIFont.systemFont(ofSize: size)
-		}
-
-		font = weight.map{font.withWeight($0)} ?? font
-		font = design.map{font.withSystemDesign($0)} ?? font
-
-		if let traits = traits {
-			font = font.withFontDescriptor(font.fontDescriptor.withSymbolicTraits(font.fontDescriptor.symbolicTraits.union(traits)))
-		}
-		
-		var features = alternateStyles.features
-		numberCase.flatMap { features += $0.features }
-		numberSpacing.flatMap { features += $0.features }
-		fractionStyle.flatMap { features += $0.features }
-		smallCapsStyle.flatMap { features += $0.features }
-		font = font.withFeatureSettings(features)
-
-		switch scalability {
-			case .placeholder, .fixed:
-				return font
-
-			case .scalable:
-				let metrics = style.map {UIFontMetrics(forTextStyle: $0)} ?? UIFontMetrics.default
-				if let maximumSize = maximumSize {
-					return metrics.scaledFont(for: font, maximumPointSize: maximumSize)
-				} else {
-					return metrics.scaledFont(for: font)
-				}
-		}
-	}
+	func font() -> UIFont { cachedOrCreatedFont() }
 
 	func additionalLineSpacing() -> CGFloat {
 		guard let lineHeight = lineHeight else {return 0}
@@ -242,129 +193,55 @@ public extension Font {
 	}
 }
 
-public extension Font {
-	/// defines the casing for numbers
-	enum NumberCase {
-		/// numbers can extend beyond the baseline, regular style
-		case lower
-		/// numbers do not extend beyond the baseline, similar as upper case
-		case upper
-		
-		fileprivate var features: [(Int, Int)] {
-			switch self {
-				case .lower: return [(kNumberCaseType, kLowerCaseNumbersSelector)]
-				case .upper: return [(kNumberCaseType, kUpperCaseNumbersSelector)]
-			}
-		}
+extension Font {
+	private func with<T>(value: T? = nil, for keyPath: WritableKeyPath<Font, T>) -> Self {
+		guard let value = value else { return self }
+		var item = self
+		item[keyPath: keyPath] = value
+		return item
 	}
 	
-	/// defines the spacing for numbers
-	enum NumberSpacing {
-		/// all numbers have fixed width. Useful for when animating numbers or lining up columns of numbers.
-		case monospaced
-		/// numbers are proportionally spaced, looks better in regular text.
-		case proportional
-		
-		fileprivate var features: [(Int, Int)] {
-			switch self {
-				case .monospaced: return [(kNumberSpacingType, kMonospacedNumbersSelector)]
-				case .proportional: return [(kNumberSpacingType, kProportionalNumbersSelector)]
-			}
-		}
+	private func with<T>(nullableValue value: T? = nil, for keyPath: WritableKeyPath<Font, T?>) -> Self {
+		var item = self
+		item[keyPath: keyPath] = value
+		return item
 	}
 	
-	/// defines how fractions are displayed
-	enum FractionStyle {
-		/// no special fraction formatting
-		case disabled
-		/// fractions are written diagonal  like (1/2)
-		case diagonal
-		/// fractions are written vertically
-		case vertical
-		
-		fileprivate var features: [(Int, Int)] {
-			switch self {
-				case .disabled: return [(kFractionsType, kNoFractionsSelector)]
-				case .diagonal: return [(kFractionsType, kDiagonalFractionsSelector)]
-				case .vertical: return [(kFractionsType, kVerticalFractionsSelector)]
-			}
-		}
-	}
-	
-	/// defines which characters are replaced by small caps
-	enum SmallCapsStyle {
-		case disabled
-		case replaceUppercase
-		case replaceLowercase
-		case replaceAll
-		
-		fileprivate var features: [(Int, Int)] {
-			switch self {
-				case .disabled: return [(kLowerCaseType, kDefaultLowerCaseSelector), (kUpperCaseType, kDefaultUpperCaseSelector)]
-				case .replaceUppercase: return [(kUpperCaseType, kUpperCaseSmallCapsSelector)]
-				case .replaceLowercase: return [(kLowerCaseType, kLowerCaseSmallCapsSelector)]
-				case .replaceAll: return [(kLowerCaseType, kLowerCaseSmallCapsSelector), (kUpperCaseType, kUpperCaseSmallCapsSelector)]
-			}
-		}
-	}
-
-	/// defines alternate styles for san francisco
-	struct AlternateStyle: RawRepresentable, OptionSet {
-		public var rawValue: Int
-		
-		public init(rawValue: Int) {
-			self.rawValue = rawValue
+	func uncachedFont() -> UIFont {
+		var font: UIFont
+		if let name = name {
+			font = UIFont(name: name, size: size) ?? UIFont.systemFont(ofSize: size)
+		} else if size == 0, let style = style {
+			font = UIFont.preferredFont(forTextStyle: style)
+		} else {
+			font = UIFont.systemFont(ofSize: size)
 		}
 		
-		public static let none = Self(rawValue: 0 << 0)
-		public static let one = Self(rawValue: 1 << 1)
-		public static let two = Self(rawValue: 1 << 2)
-		public static let three = Self(rawValue: 1 << 3)
-		public static let four = Self(rawValue: 1 << 4)
-		public static let five = Self(rawValue: 1 << 5)
-		public static let six = Self(rawValue: 1 << 6)
-		public static let seven = Self(rawValue: 1 << 7)
-		public static let eight = Self(rawValue: 1 << 8)
-		public static let nine = Self(rawValue: 1 << 9)
-		public static let ten = Self(rawValue: 1 << 10)
-		public static let eleven = Self(rawValue: 1 << 11)
-		public static let twelve = Self(rawValue: 1 << 12)
-		public static let thirteen = Self(rawValue: 1 << 13)
-		public static let fourteen = Self(rawValue: 1 << 14)
-		public static let fifteen = Self(rawValue: 1 << 15)
-		public static let sixteen = Self(rawValue: 1 << 16)
-		public static let seventeen = Self(rawValue: 1 << 17)
-		public static let eighteen = Self(rawValue: 1 << 18)
-		public static let nineteen = Self(rawValue: 1 << 19)
-		public static let twenty = Self(rawValue: 1 << 20)
+		font = weight.map{ font.withWeight($0) } ?? font
+		font = design.map{ font.withSystemDesign($0) } ?? font
 		
-		public enum sanFransisco {
-			public static let straightSidesSixAndNine = AlternateStyle.one
-			public static let openFour = AlternateStyle.two
-			public static let verticallyAlignedColon = AlternateStyle.three
-			public static let openCurrencies = AlternateStyle.four
-			public static let highLegibility = AlternateStyle.six
-			public static let oneStoreyA = AlternateStyle.seven
-			
-			// also in the font, but unknown:
-			// public static let calculator = AlternateStyle.?
-			// public static let circleSymbols = AlternateStyle.?
-			// public static let circleSymbols = AlternateStyle.?
-			// public static let squareSymbols = AlternateStyle.?
-			// public static let filledSymbols = AlternateStyle.?
-			// public static let smallSymbols = AlternateStyle.?
-			// public static let largeSymbols = AlternateStyle.?
-			// public static let lowercaseAlignment = AlternateStyle.?
+		if let traits = traits {
+			font = font.withFontDescriptor(font.fontDescriptor.withSymbolicTraits(font.fontDescriptor.symbolicTraits.union(traits)))
 		}
-		public typealias sf = sanFransisco
 		
-		fileprivate var features: [(Int, Int)] {
-			guard self != .none else { return [] }
-			var features = [(Int, Int)]()
-			for index in 1...20 where contains(Self(rawValue: 1 << index)) {
-				features.append((kStylisticAlternativesType, index * 2))
-			}
-			return features
+		var features = alternateStyles.features
+		numberCase.flatMap { features += $0.features }
+		numberSpacing.flatMap { features += $0.features }
+		fractionStyle.flatMap { features += $0.features }
+		smallCapsStyle.flatMap { features += $0.features }
+		font = font.withFeatureSettings(features)
+		
+		switch scalability {
+			case .placeholder, .fixed:
+				return font
+				
+			case .scalable:
+				let metrics = style.map { UIFontMetrics(forTextStyle: $0) } ?? UIFontMetrics.default
+				if let maximumSize = maximumSize {
+					return metrics.scaledFont(for: font, maximumPointSize: maximumSize)
+				} else {
+					return metrics.scaledFont(for: font)
+				}
 		}
 	}
 }
