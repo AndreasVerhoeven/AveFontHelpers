@@ -146,6 +146,8 @@ public extension Font {
 	var unkerned: Self { with(kerning: nil) }
 	var fixed: Self { with(scalability: .fixed) }
 	
+	var noCustomLineHeight: Self { with(lineHeight: nil) }
+	
 	func with(numberCase: NumberCase? = nil) -> Self { with(nullableValue: numberCase, for: \.numberCase) }
 	func with(numberSpacing: NumberSpacing? = nil) -> Self { with(nullableValue: numberSpacing, for: \.numberSpacing) }
 	func with(fractionStyle: FractionStyle? = nil) -> Self { with(nullableValue: fractionStyle, for: \.fractionStyle) }
