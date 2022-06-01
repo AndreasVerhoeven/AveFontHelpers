@@ -12,10 +12,6 @@ public protocol AveViewFontInitable {
 }
 
 public extension UILabel {
-	convenience init(text: String? = nil, font: Font, textColor: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
-		self.init(text: text, font: font, color: textColor, alignment: alignment, numberOfLines: numberOfLines)
-	}
-	
 	convenience init(text: String? = nil, font: Font, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
 		self.init()
 		self.font = .from(font)
@@ -32,10 +28,6 @@ public extension UILabel {
 }
 
 public extension UITextView {
-	convenience init(text: String? = nil, font: Font, textColor: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
-		self.init(text: text, font: font, color: textColor, alignment: alignment, isScrollEnabled: isScrollEnabled)
-	}
-	
 	convenience init(text: String? = nil, font: Font, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
 		self.init()
 		self.font = .from(font)
