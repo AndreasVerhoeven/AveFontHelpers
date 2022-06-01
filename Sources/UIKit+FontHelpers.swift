@@ -12,6 +12,10 @@ public protocol AveViewFontInitable {
 }
 
 public extension UILabel {
+	convenience init(text: String? = nil, font: Font, textColor: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
+		self.init(text: text, font: font, color: textColor, alignment: alignment, numberOfLines: numberOfLines)
+	}
+	
 	convenience init(text: String? = nil, font: Font, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
 		self.init()
 		self.font = .from(font)
@@ -27,8 +31,12 @@ public extension UILabel {
 	}
 }
 
-extension UITextView {
-	public convenience init(text: String? = nil, font: Font, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
+public extension UITextView {
+	convenience init(text: String? = nil, font: Font, textColor: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
+		self.init(text: text, font: font, color: textColor, alignment: alignment, isScrollEnabled: isScrollEnabled)
+	}
+	
+	convenience init(text: String? = nil, font: Font, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
 		self.init()
 		self.font = .from(font)
 		color.map { self.textColor = $0 }
@@ -42,8 +50,8 @@ extension UITextView {
 	}
 }
 
-extension UIButton {
-	public convenience init(title: String? = nil, font: Font, type: UIButton.ButtonType) {
+public extension UIButton {
+	convenience init(title: String? = nil, font: Font, type: UIButton.ButtonType) {
 		self.init(type: type)
 		self.setTitle(title, for: .normal)
 		self.titleLabel?.font = .from(font)
