@@ -7,6 +7,10 @@
 
 import UIKit
 
+public protocol AveViewFontInitable {
+	func setCustomFont(_ font: Font)
+}
+
 public extension UILabel {
 	convenience init(text: String? = nil, font: Font, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
 		self.init()
@@ -16,6 +20,10 @@ public extension UILabel {
 		self.numberOfLines = numberOfLines
 		self.adjustsFontForContentSizeCategory = font.shouldAdjustsFontForContentSizeCategory
 		self.text = text
+		
+		if let settable = self as? AveViewFontInitable {
+			settable.setCustomFont(font)
+		}
 	}
 }
 
@@ -27,6 +35,10 @@ extension UITextView {
 		self.textAlignment = alignment
 		self.adjustsFontForContentSizeCategory = font.shouldAdjustsFontForContentSizeCategory
 		self.text = text
+		
+		if let settable = self as? AveViewFontInitable {
+			settable.setCustomFont(font)
+		}
 	}
 }
 
@@ -37,5 +49,9 @@ extension UIButton {
 		self.titleLabel?.font = .from(font)
 		self.titleLabel?.adjustsFontForContentSizeCategory = font.shouldAdjustsFontForContentSizeCategory
 		self.adjustsImageSizeForAccessibilityContentSizeCategory = font.shouldAdjustsFontForContentSizeCategory
+		
+		if let settable = self as? AveViewFontInitable {
+			settable.setCustomFont(font)
+		}
 	}
 }
