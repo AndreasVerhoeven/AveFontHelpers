@@ -20,6 +20,7 @@
 		49A6F8232652B91D002EB98D /* Font+ConvenenienceInits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F8222652B91D002EB98D /* Font+ConvenenienceInits.swift */; };
 		49A6F8252652BBE7002EB98D /* UIKit+FontHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A6F8242652BBE7002EB98D /* UIKit+FontHelpers.swift */; };
 		49BE82DF2652C06E001CEC2A /* Font+TextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE82DE2652C06E001CEC2A /* Font+TextStyles.swift */; };
+		49CF2074284773CB00991BE6 /* SymbolConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CF2073284773CB00991BE6 /* SymbolConfiguration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		49A6F8222652B91D002EB98D /* Font+ConvenenienceInits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+ConvenenienceInits.swift"; sourceTree = "<group>"; };
 		49A6F8242652BBE7002EB98D /* UIKit+FontHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+FontHelpers.swift"; sourceTree = "<group>"; };
 		49BE82DE2652C06E001CEC2A /* Font+TextStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+TextStyles.swift"; sourceTree = "<group>"; };
+		49CF2073284773CB00991BE6 /* SymbolConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				49A6F8202652B8E1002EB98D /* UIFontWeight+Helper.swift */,
 				49A6F8242652BBE7002EB98D /* UIKit+FontHelpers.swift */,
 				49BE82DE2652C06E001CEC2A /* Font+TextStyles.swift */,
+				49CF2073284773CB00991BE6 /* SymbolConfiguration.swift */,
 			);
 			name = Sources;
 			path = ../Sources;
@@ -176,6 +179,7 @@
 				49A6F8252652BBE7002EB98D /* UIKit+FontHelpers.swift in Sources */,
 				49A6F81D2652B3D8002EB98D /* Font.swift in Sources */,
 				4973A6152846BB9B0018B706 /* Font+AdditionalProperties.swift in Sources */,
+				49CF2074284773CB00991BE6 /* SymbolConfiguration.swift in Sources */,
 				49A6F79826508AAB002EB98D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
