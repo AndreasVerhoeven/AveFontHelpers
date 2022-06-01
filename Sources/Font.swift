@@ -102,6 +102,7 @@ public extension Font {
 	func with(scalability: Scalability?) -> Self { with(value: scalability, for: \.scalability) }
 	func with(traits: UIFontDescriptor.SymbolicTraits?) -> Self { with(value: traits, for: \.traits) }
 	func with(kerning: CGFloat? = nil) -> Self { with(nullableValue: kerning, for: \.kerning) }
+	func with(lineHeight: CGFloat? = nil) -> Self { with(nullableValue: lineHeight, for: \.lineHeight) }
 
 	func adding(traits: UIFontDescriptor.SymbolicTraits?) -> Self {
 		guard let traits = traits else {return self}
