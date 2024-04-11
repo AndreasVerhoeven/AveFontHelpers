@@ -11,6 +11,10 @@ extension Font {
 	fileprivate static var cache = NSCache<CacheKey, UIFont>()
 
 	internal func cachedOrCreatedFont() -> UIFont {
+		guard isOnlyTextStyle == false else {
+			return uncachedFont()
+		}
+		
 		let cache = Self.cache
 		let key = CacheKey(font: self, contentSizeCategory: UITraitCollection.current.preferredContentSizeCategory)
 		if let cachedFont = cache.object(forKey: key) {

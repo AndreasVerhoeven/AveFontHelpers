@@ -62,21 +62,42 @@ public struct Font: Hashable {
 		/// this font is unscalable
 		case fixed
 	}
-	
+
 	/// which number case to use
 	public var numberCase: NumberCase? = nil
-	
+
 	/// which number spacing to use
 	public var numberSpacing: NumberSpacing? = nil
-	
+
 	/// which fraction style to use
 	public var fractionStyle: FractionStyle? = nil
-	
+
 	/// which small caps style to use
 	public var smallCapsStyle: SmallCapsStyle? = nil
-	
+
 	/// which alternate styles to use
 	public var alternateStyles = AlternateStyle.none
+}
+
+public extension Font {
+	/// returns true if this font only uses a text style
+	var isOnlyTextStyle: Bool {
+		guard size == 0 else { return false }
+		guard maximumSize == nil else { return false }
+		guard style != nil else { return false }
+		guard weight == nil else { return false }
+		guard design == nil else { return false }
+		guard traits == nil else { return false }
+		guard name == nil else { return false }
+		guard kerning == nil else { return false }
+		guard lineHeight == nil else { return false }
+		guard numberCase == nil else { return false }
+		guard numberSpacing == nil else { return false }
+		guard fractionStyle == nil else { return false }
+		guard smallCapsStyle == nil else { return false }
+		guard alternateStyles == .none else { return false }
+		return true
+	}
 }
 
 public extension Font {
@@ -128,8 +149,21 @@ public extension Font {
 		}
 	}
 
-	var rounded: Self { with(design: .rounded) }
-	var serif: Self { with(design: .serif) }
+	var rounded: Self {
+		if #available(iOS 13, *) {
+			return with(design: .rounded)
+		} else {
+			return self
+		}
+	}
+
+	var serif: Self {
+		if #available(iOS 13, watchOS 7, *) {
+			return with(design: .serif)
+		} else {
+			return self
+		}
+	}
 
 	var ultraLight: Self { with(weight: .ultraLight) }
 	var thin: Self { with(weight: .thin) }
@@ -145,32 +179,32 @@ public extension Font {
 
 	var unkerned: Self { with(kerning: nil) }
 	var fixed: Self { with(scalability: .fixed) }
-	
+
 	var noCustomLineHeight: Self { with(lineHeight: nil) }
-	
+
 	func with(numberCase: NumberCase? = nil) -> Self { with(nullableValue: numberCase, for: \.numberCase) }
 	func with(numberSpacing: NumberSpacing? = nil) -> Self { with(nullableValue: numberSpacing, for: \.numberSpacing) }
 	func with(fractionStyle: FractionStyle? = nil) -> Self { with(nullableValue: fractionStyle, for: \.fractionStyle) }
 	func with(smallCapsStyle: SmallCapsStyle? = nil) -> Self { with(nullableValue: smallCapsStyle, for: \.smallCapsStyle) }
 	func with(alternateStyles: AlternateStyle = .none) -> Self { with(value: alternateStyles, for: \.alternateStyles) }
-	
+
 	func adding(alternateStyles: AlternateStyle?) -> Self {
 		guard let alternateStyles = alternateStyles else { return self }
 		var item = self
 		item.alternateStyles.formUnion(alternateStyles)
 		return item
 	}
-	
+
 	func removing(alternateStyles: AlternateStyle?) -> Self {
 		guard let alternateStyles = alternateStyles else { return self }
 		var item = self
 		item.alternateStyles.subtract(alternateStyles)
 		return item
 	}
-	
+
 	var monospacedNumbers: Self { with(numberSpacing: .monospaced) }
 	var proportionalSpacedNumbers: Self { with(numberSpacing: .proportional) }
-	
+
 	var sfStraightSidesSixAndNine: Self { adding(alternateStyles: .sf.straightSidesSixAndNine) }
 	var sfOpenFour: Self { adding(alternateStyles: .sf.openFour) }
 	var sfVerticallyAlignedColon: Self { adding(alternateStyles: .sf.verticallyAlignedColon) }
@@ -203,14 +237,18 @@ extension Font {
 		item[keyPath: keyPath] = value
 		return item
 	}
-	
+
 	private func with<T>(nullableValue value: T? = nil, for keyPath: WritableKeyPath<Font, T?>) -> Self {
 		var item = self
 		item[keyPath: keyPath] = value
 		return item
 	}
-	
+
 	func uncachedFont() -> UIFont {
+		guard isOnlyTextStyle == false else {
+			return UIFont.preferredFont(forTextStyle: style ?? .body)
+		}
+
 		var font: UIFont
 		if let name = name {
 			font = UIFont(name: name, size: size) ?? UIFont.systemFont(ofSize: size)
@@ -219,25 +257,28 @@ extension Font {
 		} else {
 			font = UIFont.systemFont(ofSize: size)
 		}
-		
+
 		font = weight.map{ font.withWeight($0) } ?? font
-		font = design.map{ font.withSystemDesign($0) } ?? font
-		
+
+		if #available(iOS 13, *) {
+			font = design.map{ font.withSystemDesign($0) } ?? font
+		}
+
 		if let traits = traits {
 			font = font.withFontDescriptor(font.fontDescriptor.withSymbolicTraits(font.fontDescriptor.symbolicTraits.union(traits)))
 		}
-		
+
 		var features = alternateStyles.features
 		numberCase.flatMap { features += $0.features }
 		numberSpacing.flatMap { features += $0.features }
 		fractionStyle.flatMap { features += $0.features }
 		smallCapsStyle.flatMap { features += $0.features }
 		font = font.withFeatureSettings(features)
-		
+
 		switch scalability {
 			case .placeholder, .fixed:
 				return font
-				
+
 			case .scalable:
 				let metrics = style.map { UIFontMetrics(forTextStyle: $0) } ?? UIFontMetrics.default
 				if let maximumSize = maximumSize {
