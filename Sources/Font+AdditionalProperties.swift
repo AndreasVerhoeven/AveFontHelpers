@@ -133,5 +133,3 @@ public extension Font {
 		}
 	}
 }
-
-extension UIFontDescriptor.SymbolicTraits: Hashable {}

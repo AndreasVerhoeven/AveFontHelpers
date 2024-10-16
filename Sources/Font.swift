@@ -38,7 +38,10 @@ public struct Font: Hashable {
 	public var design: UIFontDescriptor.SystemDesign? = nil
 
 	/// custom traits for our font
-	public var traits: UIFontDescriptor.SymbolicTraits? = nil
+	public var traits: UIFontDescriptor.SymbolicTraits? {
+		get { _wrappedTraits.traits }
+		set { _wrappedTraits.traits = newValue }
+	}
 
 	/// how the font should scale
 	public var scalability: Scalability = .scalable
@@ -77,6 +80,20 @@ public struct Font: Hashable {
 
 	/// which alternate styles to use
 	public var alternateStyles = AlternateStyle.none
+
+	// MARK: - Privates
+
+	/// UIFontDescriptor.SymbolicTraits is incorrectly not hashable - make it hashable
+	///  by wrapping it into our own structure
+	private struct SymbolicTraitsWrapper: Hashable {
+		var traits: UIFontDescriptor.SymbolicTraits?
+
+		func hash(into hasher: inout Hasher) {
+			hasher.combine(traits?.rawValue)
+		}
+	}
+
+	private var _wrappedTraits = SymbolicTraitsWrapper()
 }
 
 public extension Font {
