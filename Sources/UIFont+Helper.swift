@@ -16,6 +16,15 @@ public extension UIFont {
 	var black: UIFont { withWeight(.black) }
 	var semibold: UIFont { withWeight(.semibold) }
 
+	static func preferredFont(forTextStyle textStyle: UIFont.TextStyle, contentSizeCategory: UIContentSizeCategory) -> UIFont {
+		var font: UIFont? = nil
+		UITraitCollection(traitsFrom: [.current, UITraitCollection(preferredContentSizeCategory: .large)]).performAsCurrent {
+			font = UIFont.preferredFont(forTextStyle: textStyle, compatibleWith: .current)
+		}
+
+		return font ?? UIFont.preferredFont(forTextStyle: textStyle)
+	}
+
 	func withTextStyle(_ textStyle: UIFont.TextStyle) -> UIFont {
 		let metrics = UIFontMetrics(forTextStyle: textStyle)
 		return metrics.scaledFont(for: self)

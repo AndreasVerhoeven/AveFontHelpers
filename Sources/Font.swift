@@ -270,7 +270,16 @@ extension Font {
 		if let name = name {
 			font = UIFont(name: name, size: size) ?? UIFont.systemFont(ofSize: size)
 		} else if size == 0, let style = style {
-			font = UIFont.preferredFont(forTextStyle: style)
+			switch scalability {
+				case .placeholder, .fixed: 
+					font = UIFont.preferredFont(forTextStyle: style)
+
+				case .scalable:
+					// we want an unscaled font (`large` is the unscaled content size), because we scale it later
+					// ourselves
+					font = UIFont.preferredFont(forTextStyle: style, contentSizeCategory: .large)
+			}
+
 		} else {
 			font = UIFont.systemFont(ofSize: size)
 		}
