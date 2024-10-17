@@ -279,7 +279,6 @@ extension Font {
 					// ourselves
 					font = UIFont.preferredFont(forTextStyle: style, contentSizeCategory: .large)
 			}
-
 		} else {
 			font = UIFont.systemFont(ofSize: size)
 		}
